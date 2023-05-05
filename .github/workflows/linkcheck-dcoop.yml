@@ -1,0 +1,71 @@
+name: linkcheck-datacooperative
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 23 * * 0' # every Sunday at 11pm
+env:
+  OUTDIR: 'dcoop'
+  SITE: 'https://data.library.arizona.edu'
+
+jobs:
+  runlinkcheck:
+    name: Linkcheck
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      out_sha: ${{ steps.git-auto-commit-action.outputs.commit_hash }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - name: install linkchecker
+        run: pip install -r requirements.txt
+      - name: set output filename
+        run: |
+          echo "OUTFILE=$(date "+%Y.%m.%d-%H.%M.%S").html" >> "$GITHUB_ENV"
+      - name: run check
+        continue-on-error: true
+        run:
+          linkchecker -f linkcheckerrc -F html/reports/${{ env.OUTDIR }}/${{ env.OUTFILE }} ${{ env.SITE }}
+      - name: commit output report
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 📝 Create report for ${{ github.workflow }} [skip ci]
+
+  pages-directory-listing:
+    runs-on: ubuntu-latest
+    name: Create Directory Listings Index
+    needs: runlinkcheck
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.runlinkcheck.outputs.out_sha }}
+      - name: Generate Directory Listings
+        uses: jayanta525/github-pages-directory-listing@v3.0.0
+        with:
+          FOLDER: 'reports'      #directory to generate index
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'reports'      # upload generated folder
+  
+  deploy: #ensure GH pages has been enabled w/GitHub Actions as a source on the repo or this will fail
+    needs: pages-directory-listing
+    name: Deploy Listings Index Page
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
