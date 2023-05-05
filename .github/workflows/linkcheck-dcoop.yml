@@ -14,7 +14,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      out_sha: ${{ steps.git-auto-commit-action.outputs.commit_hash }}
+      out_sha: ${{ steps.commit-action.outputs.commit_hash }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -26,13 +26,14 @@ jobs:
       - name: install linkchecker
         run: pip install -r requirements.txt
       - name: set output filename
-        run: |
+        run:
           echo "OUTFILE=$(date "+%Y.%m.%d-%H.%M.%S").html" >> "$GITHUB_ENV"
       - name: run check
         continue-on-error: true
         run:
           linkchecker -f linkcheckerrc -F html/reports/${{ env.OUTDIR }}/${{ env.OUTFILE }} ${{ env.SITE }}
       - name: commit output report
+        id: commit-action
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 📝 Create report for ${{ github.workflow }} [skip ci]
