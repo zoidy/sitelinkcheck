@@ -63,8 +63,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           runid: ${{ github.run_id }}
-          workflow: ${{ github.workflow }}
+          workflow: ${{ github.workflow }}          
           result: Run Linkcheck success, generate Create Directory Index fail
+          site: ${{ env.SITE }}
           result_link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           short_sha:  ${{ steps.get_short_sha.outputs.shortsha }}
           commit_link: ${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit-action.outputs.commit_hash }}
@@ -100,6 +101,7 @@ jobs:
           runid: ${{ github.run_id }}
           workflow: ${{ github.workflow }}
           result: Create Directory Index success, deploy fail
+          site: ${{ env.SITE }}
           result_link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           short_sha:  ${{ needs.runlinkcheck.outputs.out_sha_short }}
           commit_link: ${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.runlinkcheck.outputs.out_sha }}
@@ -150,6 +152,7 @@ jobs:
           runid: ${{ github.run_id }}
           workflow: ${{ github.workflow }}
           result: Deploy page successful
+          site: ${{ env.SITE }}
           result_link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           short_sha:  ${{ needs.runlinkcheck.outputs.out_sha_short }}
           commit_link: ${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.runlinkcheck.outputs.out_sha }}
