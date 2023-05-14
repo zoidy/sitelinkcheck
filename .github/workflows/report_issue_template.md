@@ -1,7 +1,7 @@
 ---
 title: Report for {{ env.workflow }} run {{ env.runid }}
 ---
-Checked [{{ env.site }}]({{ env.site }})
+Checked [{{ env.site }}]({{ env.site }})  
 [View report]({{ env.report_link }})  
 
 Action status: [{{ env.result }}]({{ env.result_link }})  
