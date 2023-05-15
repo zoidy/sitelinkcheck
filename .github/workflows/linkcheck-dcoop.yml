@@ -5,8 +5,8 @@ on:
     - cron: '0 23 * * 0' # every Sunday at 11pm
 env:
   OUTDIR: 'dcoop'
-  SITE: 'https://data.library.arizona.edu'
-  NOTIFY: '@zoidy @jcoliver @heatherfro' #enter GitHub IDs in the form @username. Separate multiple entries by commas or spaces
+  SITE: 'http://sublimeshininggrandspell.neverssl.com/online/'
+  NOTIFY: '@zoidy' #enter GitHub IDs in the form @username. Separate multiple entries by commas or spaces
 
 jobs:
   runlinkcheck:
