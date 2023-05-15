@@ -1,8 +1,8 @@
 name: DataCooperative
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 23 * * 0' # every Sunday at 11pm
+  #schedule:
+  #  - cron: '0 23 * * 0' # every Sunday at 11pm
 env:
   OUTDIR: 'dcoop'
   SITE: 'http://sublimeshininggrandspell.neverssl.com/online/'
