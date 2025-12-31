@@ -38,7 +38,7 @@ jobs:
       - name: run check stage 1
         continue-on-error: true
         run:
-          linkchecker -f linkcheckerrc-${{ env.OUTDIR }} -F linkchecker-out.html ${{ env.SITE }}
+          linkchecker -f linkcheckerrc-${{ env.OUTDIR }} -F html/linkchecker-out.html ${{ env.SITE }}
       - name: run check stage 2
         run:
            python linkchecker-stage2.py linkchecker-out.html reports/${{ env.OUTDIR }}/${{ env.OUTFILE }}
